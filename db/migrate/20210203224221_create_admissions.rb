@@ -3,6 +3,7 @@ class CreateAdmissions < ActiveRecord::Migration[6.1]
     create_table :admissions do |t|
       t.datetime :moment
       t.integer :facility_id
+      t.integer :patient_id
 
       t.timestamps
     end
