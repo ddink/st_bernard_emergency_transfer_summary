@@ -1,7 +1,10 @@
 FactoryBot.define do
   factory :order_frequency do
-    value { "MyString" }
-    unit { 1 }
-    medication_order_id { 1 }
+    value { "Every other" }
+    unit { :hour }
+
+    trait :with_medication_order do
+      medication_order_id { build_stubbed(:medication_order).id }
+    end
   end
 end

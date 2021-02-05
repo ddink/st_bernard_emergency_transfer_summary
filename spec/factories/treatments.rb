@@ -2,6 +2,9 @@ FactoryBot.define do
   factory :treatment do
     description { "Wrap the leg in a cast." }
     necessity { "Leg length cast" }
-    patient_id { create(:patient).id }
+
+    trait :with_patient do
+      patient_id { build_stubbed(:patient).id }
+    end
   end
 end

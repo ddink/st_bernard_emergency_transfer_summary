@@ -1,10 +1,13 @@
 FactoryBot.define do
   factory :medication_order do
-    name { "MyString" }
-    dosage { "9.99" }
-    necessity { "MyText" }
-    mass_unit { 1 }
-    medication_route { 1 }
-    patient_id { 1 }
+    name { "Morphine" }
+    dosage { "0.13" }
+    necessity { "Fracture" }
+    mass_unit { :mg }
+    medication_route { :PO }
+
+    trait :with_patient do
+      patient_id { build_stubbed(:patient).id }
+    end
   end
 end
