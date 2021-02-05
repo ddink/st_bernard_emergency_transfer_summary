@@ -4,7 +4,7 @@ class Patient < ApplicationRecord
   has_one :admission
   has_many :allergies
   has_many :chronic_conditions, foreign_key: "patient_id", class_name: "Diagnosis"
-  has_many :medications, foreign_key: "patient_id", class_name: "MedicationOrders"
+  has_many :medications, foreign_key: "patient_id", class_name: "MedicationOrder"
   has_many :diagnostic_procedures
   has_many :diagnoses
   has_many :treatments
