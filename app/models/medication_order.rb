@@ -6,6 +6,20 @@ class MedicationOrder < ApplicationRecord
 
   validates_presence_of :name, :mass_unit, :dosage, :frequency
 
+  def unit
+    mass_unit
+  end
+
+  def route
+    medication_route
+  end
+
+  def dosage_decimal
+    dosage.to_s.sub(/\.?0+$/, '')
+  end
+
+  private
+
   class << self
     def unit
       mass_units
