@@ -1,5 +1,4 @@
 class OrderFrequency < ApplicationRecord
-  enum unit: [:hour]
-
+  enum unit: [:hr]
   validates_presence_of :value, :unit
 end
