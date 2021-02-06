@@ -4,6 +4,7 @@ RSpec.describe Facility, type: :model do
 
   describe "associations" do
     it { should have_many :admissions }
+    it { should have_many(:patients).through(:admissions) }
   end
 
   describe "validations" do
