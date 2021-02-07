@@ -27,18 +27,26 @@ RSpec.describe MedicationOrder, type: :model do
     end
   end
 
-  describe 'dosage_decimal' do
+  describe 'methods' do
     before do
-      @medication = build_stubbed(:medication_order, dosage: 500.00)
+      @medication = create(:medication_order, dosage: 500.00, frequency: create(:order_frequency))
     end
 
-    it "should remove trailing zeroes from decimal" do
-      assert_equal @medication.dosage_decimal, '500'
+    describe 'dosage_decimal' do
+      it "should remove trailing zeroes from decimal" do
+        assert_equal @medication.dosage_decimal, '500'
+      end
+
+      it "should still correctly display decimals" do
+        @medication.dosage = 500.13
+        assert_equal @medication.dosage_decimal, '500.13'
+      end
     end
 
-    it "should still correctly display decimals" do
-      @medication.dosage = 500.13
-      assert_equal @medication.dosage_decimal, '500.13'
+    describe 'frequency_value' do
+      it "should correctly display the frequency's value" do
+        assert_equal @medication.frequency_value, 'q6'
+      end
     end
   end
 end

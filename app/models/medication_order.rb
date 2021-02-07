@@ -18,6 +18,10 @@ class MedicationOrder < ApplicationRecord
     dosage.to_s.sub(/\.?0+$/, '')
   end
 
+  def frequency_value
+    frequency.value
+  end
+
   private
 
   class << self
