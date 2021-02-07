@@ -21,6 +21,6 @@ class Admission < ApplicationRecord
   end
 
   def observations_description
-    formatted_description_for(observations).downcase
+    formatted_description_for(observations).capitalize
   end
 end

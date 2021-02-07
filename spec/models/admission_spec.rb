@@ -71,11 +71,11 @@ RSpec.describe Admission, type: :model do
 
     it "should clearly describe an individual observation" do
       remove_last_item_in_collection @admission.observations
-      expect(@admission.observations_description).to eql "it appears to be a fracture"
+      expect(@admission.observations_description).to eql "It appears to be a fracture"
     end
 
     it "should clearly describe the patient's observations" do
-      expect(@admission.observations_description).to eql "it appears to be a fracture and no soft tissues were damaged"
+      expect(@admission.observations_description).to eql "It appears to be a fracture and no soft tissues were damaged"
     end
   end
 
