@@ -12,7 +12,7 @@ RSpec.describe Symptom, type: :model do
   describe "description" do
     it "should show text" do
       symptom = build_stubbed :symptom
-      assert_equal symptom.description, "Shooting pain in the leg."
+      assert_equal symptom.description, "Shooting pain in the leg"
     end
   end
 end

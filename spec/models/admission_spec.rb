@@ -31,19 +31,57 @@ RSpec.describe Admission, type: :model do
     end
   end
 
-  describe 'diagnosis_description' do
+  describe 'diagnoses_description' do
     before do
       @admission.diagnoses << create(:diagnosis, description: "femoral shaft (S95.103A)")
       @admission.diagnoses << create(:diagnosis, description: "femur (S95.105C)")
     end
 
     it "should clearly describe an individual diagnosis" do
-      @admission.diagnoses.destroy @admission.diagnoses.last
-      expect(@admission.diagnosis_description).to eql "femoral shaft (S95.103A)"
+      remove_last_item_in_collection @admission.diagnoses
+      expect(@admission.diagnoses_description).to eql "femoral shaft (S95.103A)"
     end
 
     it "should clearly describe the patient's diagnoses" do
-      expect(@admission.diagnosis_description).to eql "femoral shaft (S95.103A) and femur (S95.105C)"
+      expect(@admission.diagnoses_description).to eql "femoral shaft (S95.103A) and femur (S95.105C)"
     end
+  end
+
+  describe 'symptoms_description' do
+    before do
+      @admission.symptoms << create(:symptom)
+      @admission.symptoms << create(:symptom, description: "his leg is bleeding")
+    end
+
+    it "should clearly describe an individual symptom" do
+      remove_last_item_in_collection @admission.symptoms
+      expect(@admission.symptoms_description).to eql "shooting pain in the leg"
+    end
+
+    it "should clearly describe the patient's symptoms" do
+      expect(@admission.symptoms_description).to eql "shooting pain in the leg and his leg is bleeding"
+    end
+  end
+
+  describe 'observations_description' do
+    before do
+      @admission.observations << create(:observation)
+      @admission.observations << create(:observation, description: "no soft tissues were damaged")
+    end
+
+    it "should clearly describe an individual observation" do
+      remove_last_item_in_collection @admission.observations
+      expect(@admission.observations_description).to eql "it appears to be a fracture"
+    end
+
+    it "should clearly describe the patient's observations" do
+      expect(@admission.observations_description).to eql "it appears to be a fracture and no soft tissues were damaged"
+    end
+  end
+
+  private
+
+  def remove_last_item_in_collection(collection)
+    collection.destroy collection.last
   end
 end

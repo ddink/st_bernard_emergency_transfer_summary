@@ -15,7 +15,7 @@ RSpec.describe Observation, type: :model do
 
   describe "description" do
     it "should show text" do
-      assert_equal @observation.description, "It appears to be a fracture."
+      assert_equal @observation.description, "It appears to be a fracture"
     end
   end
 

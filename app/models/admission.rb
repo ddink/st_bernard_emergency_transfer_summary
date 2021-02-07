@@ -12,7 +12,15 @@ class Admission < ApplicationRecord
   belongs_to :facility
   alias_attribute :moment, :created_at
 
-  def diagnosis_description
-    formatted_description(diagnoses)
+  def diagnoses_description
+    formatted_description diagnoses
+  end
+
+  def symptoms_description
+    formatted_description(symptoms).downcase
+  end
+
+  def observations_description
+    formatted_description(observations).downcase
   end
 end
