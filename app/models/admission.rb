@@ -13,14 +13,14 @@ class Admission < ApplicationRecord
   alias_attribute :moment, :created_at
 
   def diagnoses_description
-    formatted_description diagnoses
+    formatted_description_for diagnoses
   end
 
   def symptoms_description
-    formatted_description(symptoms).downcase
+    formatted_description_for(symptoms).downcase
   end
 
   def observations_description
-    formatted_description(observations).downcase
+    formatted_description_for(observations).downcase
   end
 end

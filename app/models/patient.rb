@@ -39,15 +39,15 @@ class Patient < ApplicationRecord
   end
 
   def allergies_description
-    formatted_description(allergies)
+    formatted_description_for allergies
   end
 
   def chronic_conditions_description
-    formatted_description(chronic_conditions)
+    formatted_description_for chronic_conditions
   end
 
   def diagnoses_description
-    formatted_description(diagnoses)
+    formatted_description_for diagnoses
   end
 
   def medication_administered
