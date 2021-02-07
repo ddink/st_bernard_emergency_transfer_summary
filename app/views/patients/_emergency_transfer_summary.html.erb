@@ -1,0 +1,81 @@
+<div class="row">
+  <div class="col border">
+    <strong>Emergency Transfer Summary (Form 34L-D)</strong>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col border border-top--none">
+    <strong>Transferring Facility</strong>
+  </div>
+</div>
+
+<div class="row border border-top--none">
+  <div class="col-sm border border-left--none border-top-bottom--none">
+    <p>
+      Name:
+      <br>
+      <%= @patient.facility_name %>
+    </p>
+  </div>
+  <div class="col-sm"></div>
+  <div class="col-sm"></div>
+  <div class="col-sm"></div>
+  <div class="col-sm"></div>
+  <div class="col-sm"></div>
+  <div class="col-sm"></div>
+  <div class="col-sm"></div>
+</div>
+
+<div class="row">
+  <div class="col border border-top--none">
+    <strong>Patient Information</strong>
+  </div>
+</div>
+
+<div class="row border border-top--none">
+  <div class="col-sm border border-left--none border-top-bottom--none">
+    <p>
+      First Name
+      <br>
+      <%= @patient.first_name %>
+    </p>
+  </div>
+  <div class="col-sm border border-left--none border-top-bottom--none">
+    <p>
+      Middle Name
+      <br>
+      <%= @patient.middle_name %>
+    </p>
+  </div>
+  <div class="col-sm border border-left--none border-top-bottom--none">
+    <p>
+      Last Name
+      <br>
+      <%= @patient.last_name %>
+    </p>
+  </div>
+  <div class="col-sm border border-left--none border-top-bottom--none">
+    <p>
+      Medical Record (MR)
+      <br>
+      <%= @patient.medical_record %>
+    </p>
+  </div>
+  <div class="col-sm"></div>
+  <div class="col-sm"></div>
+  <div class="col-sm"></div>
+  <div class="col-sm"></div>
+</div>
+
+<div class="row">
+  <div class="col-sm border border-top--none">
+    <p>
+      <strong>Summary</strong>
+      <br>
+      <br>
+      <%= @patient.emergency_transfer_summary %>
+    </p>
+
+  </div>
+</div>
