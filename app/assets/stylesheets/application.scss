@@ -11,3 +11,5 @@
  * file per style scope.
  */
 
+// "bootstrap-sprockets" must be imported before "bootstrap" and "bootstrap/variables"
+@import "patients";
