@@ -48,6 +48,7 @@ RSpec.describe Patient, type: :model do
       moment_of_admission = DateTime.new(2021, 2,6,11)
       diagnosis1 = create(:diagnosis, description: 'right tibia (S82.101A)')
       diagnosis2 = create(:diagnosis, description: 'fibula (S82.102B)')
+      @facility = create(:facility)
       @patient = create(:patient,
                         allergies: [create(:allergy, description: "hypersensitivity to aspirin or NSAIDS"),
                                     create(:allergy, description: "gluten intolerance")],
@@ -57,7 +58,7 @@ RSpec.describe Patient, type: :model do
                                              name: 'Acetaminophen',
                                              dosage: '500',
                                              necessity: 'relieve pain',
-                                             frequency: create(:order_frequency, value: 'q4',)),
+                                             frequency: create(:order_frequency, value: 'q4')),
                                       create(:medication_order,
                                              name: 'Naproxen',
                                              medication_route: :IM,
@@ -79,16 +80,17 @@ RSpec.describe Patient, type: :model do
                                             necessity: 'receive urgent care')])
       create(:admission,
              patient: @patient,
-             facility: create(:facility),
+             facility: @facility,
              observations: [create(:observation, description: 'no soft tissues were damaged'),
                             create(:observation, description: 'and appears to be a fracture')],
              diagnoses: [diagnosis1, diagnosis2],
+             symptoms: [create(:symptom), create(:symptom, description: "his leg is bleeding")],
              created_at: moment_of_admission)
     end
 
     describe 'transfer_summary' do
-      it "should display summary based on outlined template for summary section" do
-        expect(@patient.emergency_transfer_summary).to eql spec_summary
+      it "should display summary text based on outlined template for summary section" do
+        expect(@patient.emergency_transfer_summary).to eql summary_text
       end
     end
 
@@ -126,19 +128,19 @@ RSpec.describe Patient, type: :model do
 
       it "should clearly describe multiple medications administered to the patient" do
         expect(@patient.medication_administered).to eql "Acetaminophen 500mg PO q4hr to relieve pain, "\
-                                                      "and Naproxen 500mg IM q6hr to relieve swelling"
+                                                        "and Naproxen 500mg IM q6hr to relieve swelling"
       end
     end
 
-    describe 'procedure_description' do
+    describe 'procedures_description' do
       it "should clearly describe an individual diagnosis procedure" do
         remove_last_item_in_collection @patient.diagnostic_procedures
-        expect(@patient.procedure_description).to eql "an exploratory radiography on February 6, 2021 at 11:00 am"
+        expect(@patient.procedures_description).to eql "an exploratory radiography on February 6, 2021 at 11:00 am"
       end
 
       it "should clearly describe multiple diagnosis procedures" do
-        expect(@patient.procedure_description).to eql "an exploratory radiography on February 6, 2021 at 11:00 am, "\
-                                                    "and an ultrasound on February 6, 2021 at 12:30 pm"
+        expect(@patient.procedures_description).to eql "an exploratory radiography on February 6, 2021 at 11:00 am, "\
+                                                       "and an ultrasound on February 6, 2021 at 12:30 pm"
       end
     end
 
@@ -161,25 +163,38 @@ RSpec.describe Patient, type: :model do
 
       it "should clearly display individual or multiple treatments" do
         expect(@patient.treatments_description).to eql "to temporary bracing to restrict the motion and "\
-                                                    "to triage for transport to hospital to receive urgent care"
+                                                       "to triage for transport to hospital to receive urgent care"
+      end
+    end
+
+    describe 'facility_name' do
+      it "should display the name of the facility where the patient is admitted" do
+        expect(@patient.facility_name).to eql @facility.name
       end
     end
   end
 
   private
 
-  def spec_summary
-    "This #{@patient.age} years old #{@patient.gender} was admitted to #{@patient.facility.name} "\
-    "emergency facility on #{@patient.admission.formatted_date} at #{@patient.admission.formatted_time} "\
-    "due to #{@patient.admission.diagnoses_description}. The observed symptoms on admission "\
-    "were #{@patient.admission.symptoms}. #{@patient.admission.observations}."
+  def summary_text
+    [
+        "This 21 years old male was admitted to Blue Alps Ski Camp "\
+        "emergency facility on February 6, 2021 at 11:00 am "\
+        "due to right tibia (S82.101A) and fibula (S82.102B). The observed symptoms on admission "\
+        "were shooting pain in the leg and his leg is bleeding. No soft tissues were damaged and "\
+        "and appears to be a fracture.",
 
-    "Upon asking about known allergies, the patient disclosed #{@patient.allergies_description}. "\
-    "Upon asking about chronic conditions, the patient disclosed #{@patient.chronic_conditions_description}. "\
-    "The patient was administered with #{@patient.medication_administered}."
+        "Upon asking about known allergies, the patient disclosed hypersensitivity to aspirin "\
+        "or NSAIDS and gluten intolerance. Upon asking about chronic conditions, the patient "\
+        "disclosed Asthma (J45) and Pulmonary Disease (CPOD). "\
+        "The patient was administered with Acetaminophen 500mg PO q4hr to relieve pain, "\
+        "and Naproxen 500mg IM q6hr to relieve swelling.",
 
-    "The staff performed #{@patient.procedure_description}, revealing #{@patient.diagnoses_description}. "\
-    "Our team proceeded to #{@patient.treatments_description}"
+        "The staff performed an exploratory radiography on February 6, 2021 at 11:00 am, "\
+        "and an ultrasound on February 6, 2021 at 12:30 pm, revealing right tibia (S82.101A) "\
+        "and fibula (S82.102B). Our team proceeded to temporary bracing to restrict the motion "\
+        "and to triage for transport to hospital to receive urgent care"
+    ].join("\n\n")
   end
 
   def remove_last_item_in_collection(collection)

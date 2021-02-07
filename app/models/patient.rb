@@ -22,16 +22,19 @@ class Patient < ApplicationRecord
   validates :gender, inclusion: { in: ['male', 'female', 'other'] }
 
   def emergency_transfer_summary
-    "This #{age} years old #{gender} was admitted to #{facility.name} emergency facility "\
-    "on #{admission.formatted_date} at #{admission.formatted_time} due to #{admission.diagnoses_description}. "\
-    "The observed symptoms on admission were #{admission.symptoms}. #{admission.observations}."
+    [
+        "This #{age} years old #{gender} was admitted to #{facility_name} emergency facility "\
+        "on #{admission.formatted_date} at #{admission.formatted_time} due to #{admission.diagnoses_description}. "\
+        "The observed symptoms on admission were #{admission.symptoms_description}. "\
+        "#{admission.observations_description}.",
 
-    "Upon asking about known allergies, the patient disclosed #{allergies_description}. Upon asking about chronic "\
-    "conditions, the patient disclosed #{chronic_conditions_description}. The patient was administered with "\
-    "#{medication_administered}."
+        "Upon asking about known allergies, the patient disclosed #{allergies_description}. "\
+        "Upon asking about chronic conditions, the patient disclosed #{chronic_conditions_description}. "\
+        "The patient was administered with #{medication_administered}.",
 
-    "The staff performed #{procedure_description}, revealing #{diagnoses_description}. Our team proceeded to "\
-    "#{treatments_description}"
+        "The staff performed #{procedures_description}, revealing #{diagnoses_description}. Our team proceeded "\
+        "#{treatments_description}"
+    ].join("\n\n")
   end
 
   def age
@@ -54,12 +57,12 @@ class Patient < ApplicationRecord
     description = []
     medications.each do |m|
       description << "#{m.name} #{m.dosage_decimal}#{m.unit} #{m.route}"\
-                     " #{m.frequency.value}#{m.frequency.unit} to #{m.necessity}"
+                     " #{m.frequency_value}#{m.frequency.unit} to #{m.necessity}"
     end
     description.join(", and ")
   end
 
-  def procedure_description
+  def procedures_description
     description = []
     diagnostic_procedures.each do |p|
       description << "#{p.description} on #{p.formatted_date} at #{p.formatted_time}"
@@ -71,5 +74,9 @@ class Patient < ApplicationRecord
     description = []
     treatments.each { |t| description << "to #{t.description} to #{t.necessity}" }
     description.join(" and ")
+  end
+
+  def facility_name
+    facility.name
   end
 end
