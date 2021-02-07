@@ -1,7 +1,13 @@
+require 'description_format'
+
 class Patient < ApplicationRecord
+  include DescriptionFormat
+
   enum gender: [:male, :female, :other]
 
   has_one :admission
+  has_one :facility, through: :admission
+
   has_many :allergies
   has_many :chronic_conditions, foreign_key: "patient_id", class_name: "Diagnosis"
   has_many :medications, foreign_key: "patient_id", class_name: "MedicationOrder"
@@ -14,4 +20,56 @@ class Patient < ApplicationRecord
                                              greater_than_or_equal_to: 10000,
                                              less_than_or_equal_to: 99999 }
   validates :gender, inclusion: { in: ['male', 'female', 'other'] }
+
+  def emergency_transfer_summary
+    "This #{age} years old #{gender} was admitted to #{facility.name} emergency facility "\
+    "on #{admission.formatted_date} at #{admission.formatted_time} due to #{admission.diagnoses_description}. "\
+    "The observed symptoms on admission were #{admission.symptoms}. #{admission.observations}."
+
+    "Upon asking about known allergies, the patient disclosed #{allergies_description}. Upon asking about chronic "\
+    "conditions, the patient disclosed #{chronic_conditions_description}. The patient was administered with "\
+    "#{medication_administered}."
+
+    "The staff performed #{procedure_description}, revealing #{diagnoses_description}. Our team proceeded to "\
+    "#{treatments_description}"
+  end
+
+  def age
+    ((Time.zone.now - dob.to_time) / 1.year.seconds).floor.to_s
+  end
+
+  def allergies_description
+    formatted_description(allergies)
+  end
+
+  def chronic_conditions_description
+    formatted_description(chronic_conditions)
+  end
+
+  def diagnoses_description
+    formatted_description(diagnoses)
+  end
+
+  def medication_administered
+    description = []
+    medications.each do |m|
+      description << "#{m.name} #{m.dosage_decimal}#{m.unit} #{m.route}"\
+                     " #{m.frequency.value}#{m.frequency.unit} to #{m.necessity}"
+    end
+    description.join(", and ")
+  end
+
+  def procedure_description
+    description = []
+    diagnostic_procedures.each do |p|
+      description << "#{p.description} on #{p.formatted_date} at #{p.formatted_time}"
+    end
+    description.join(", and ")
+  end
+
+  def treatments_description
+    description = []
+    treatments.each { |t| description << "to #{t.description} to #{t.necessity}" }
+    description.join(" and ")
+  end
 end
