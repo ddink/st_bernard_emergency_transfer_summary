@@ -33,8 +33,8 @@ class Patient < ApplicationRecord
         "The patient was administered with #{medication_administered}.",
 
         "The staff performed #{procedures_description}, revealing #{diagnoses_description}. Our team proceeded "\
-        "#{treatments_description}"
-    ].join("\n\n")
+        "#{treatments_description}."
+    ].join("\n\n<br><br>")
   end
 
   def age

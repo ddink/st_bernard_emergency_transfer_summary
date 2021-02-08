@@ -193,8 +193,8 @@ RSpec.describe Patient, type: :model do
         "The staff performed an exploratory radiography on February 6, 2021 at 11:00 am, "\
         "and an ultrasound on February 6, 2021 at 12:30 pm, revealing right tibia (S82.101A) "\
         "and fibula (S82.102B). Our team proceeded to temporary bracing to restrict the motion "\
-        "and to triage for transport to hospital to receive urgent care"
-    ].join("\n\n")
+        "and to triage for transport to hospital to receive urgent care."
+    ].join("\n\n<br><br>")
   end
 
   def remove_last_item_in_collection(collection)

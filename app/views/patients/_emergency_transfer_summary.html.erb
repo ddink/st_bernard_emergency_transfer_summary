@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="col border">
+  <div class="col border header--grey-background">
     <strong>Emergency Transfer Summary (Form 34L-D)</strong>
   </div>
 </div>
@@ -74,7 +74,7 @@
       <strong>Summary</strong>
       <br>
       <br>
-      <%= @patient.emergency_transfer_summary %>
+      <%= sanitize @patient.emergency_transfer_summary %>
     </p>
 
   </div>
