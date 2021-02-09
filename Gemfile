@@ -40,6 +40,7 @@ group :development, :test do
   gem 'shoulda', '3.5.0'
   gem 'factory_bot_rails'
   gem 'rails-controller-testing'
+  gem 'faker', :git => 'https://github.com/faker-ruby/faker.git', :branch => 'master'
 end
 
 group :development do
