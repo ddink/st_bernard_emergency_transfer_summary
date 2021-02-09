@@ -8,7 +8,6 @@ RSpec.describe Patient, type: :model do
     it { should have_one(:facility).through(:admission) }
 
     it { should have_many :allergies }
-    it { should have_many :chronic_conditions }
     it { should have_many :medications }
     it { should have_many :diagnostic_procedures }
     it { should have_many :diagnoses }
@@ -46,14 +45,14 @@ RSpec.describe Patient, type: :model do
   describe 'methods' do
     before do
       moment_of_admission = DateTime.new(2021, 2,6,11)
-      diagnosis1 = create(:diagnosis, description: 'right tibia (S82.101A)')
-      diagnosis2 = create(:diagnosis, description: 'fibula (S82.102B)')
+      @diagnosis1 = create(:diagnosis, description: 'right tibia (S82.101A)')
+      @diagnosis2 = create(:diagnosis, description: 'fibula (S82.102B)')
+      @chronic_condition1 = create(:diagnosis, description: "Asthma (J45)", chronic_condition: true)
+      @chronic_condition2 = create(:diagnosis, description: "Pulmonary Disease (CPOD)", chronic_condition: true)
       @facility = create(:facility)
       @patient = create(:patient,
                         allergies: [create(:allergy, description: "hypersensitivity to aspirin or NSAIDS"),
                                     create(:allergy, description: "gluten intolerance")],
-                        chronic_conditions: [create(:diagnosis, description: "Asthma (J45)"),
-                                             create(:diagnosis, description: "Pulmonary Disease (CPOD)")],
                         medications: [create(:medication_order,
                                              name: 'Acetaminophen',
                                              dosage: '500',
@@ -71,7 +70,10 @@ RSpec.describe Patient, type: :model do
                                                 create(:diagnostic_procedure,
                                                        description: 'an ultrasound',
                                                        created_at: moment_of_admission + 90.minutes)],
-                        diagnoses: [diagnosis1, diagnosis2],
+                        diagnoses: [@diagnosis1,
+                                    @diagnosis2,
+                                    @chronic_condition1,
+                                    @chronic_condition2],
                         treatments: [create(:treatment,
                                             description: 'temporary bracing',
                                             necessity: 'restrict the motion'),
@@ -82,8 +84,8 @@ RSpec.describe Patient, type: :model do
              patient: @patient,
              facility: @facility,
              observations: [create(:observation, description: 'no soft tissues were damaged'),
-                            create(:observation, description: 'and appears to be a fracture')],
-             diagnoses: [diagnosis1, diagnosis2],
+                            create(:observation, description: 'appears to be a fracture')],
+             diagnoses: [@diagnosis1, @diagnosis2],
              symptoms: [create(:symptom), create(:symptom, description: "his leg is bleeding")],
              created_at: moment_of_admission)
     end
@@ -111,7 +113,7 @@ RSpec.describe Patient, type: :model do
 
     describe 'chronic_conditions_description' do
       it "should clearly describe an individual chronic condition" do
-        remove_last_item_in_collection @patient.chronic_conditions
+        @patient.chronic_conditions.last.delete
         expect(@patient.chronic_conditions_description).to eql "Asthma (J45)"
       end
 
@@ -146,7 +148,7 @@ RSpec.describe Patient, type: :model do
 
     describe 'diagnoses_description' do
       it "should clearly describe an individual diagnosis" do
-        remove_last_item_in_collection @patient.diagnoses
+        @patient.regular_diagnoses.last.delete
         expect(@patient.diagnoses_description).to eql "right tibia (S82.101A)"
       end
 
@@ -167,9 +169,15 @@ RSpec.describe Patient, type: :model do
       end
     end
 
-    describe 'facility_name' do
-      it "should display the name of the facility where the patient is admitted" do
-        expect(@patient.facility_name).to eql @facility.name
+    describe 'chronic_conditions' do
+      it "should return diagnoses marked as chronic_condition" do
+        expect(@patient.chronic_conditions).to include(@chronic_condition1, @chronic_condition2)
+      end
+    end
+
+    describe 'regular_diagnoses' do
+      it "should return diagnoses not marked as chronic_condition" do
+        expect(@patient.regular_diagnoses).to include(@diagnosis1, @diagnosis2)
       end
     end
   end
@@ -181,7 +189,7 @@ RSpec.describe Patient, type: :model do
         "This 21 years old male was admitted to Blue Alps Ski Camp "\
         "emergency facility on February 6, 2021 at 11:00 am "\
         "due to right tibia (S82.101A) and fibula (S82.102B). The observed symptoms on admission "\
-        "were shooting pain in the leg and his leg is bleeding. No soft tissues were damaged and "\
+        "were shooting pain in the leg and his leg is bleeding. No soft tissues were damaged "\
         "and appears to be a fracture.",
 
         "Upon asking about known allergies, the patient disclosed hypersensitivity to aspirin "\

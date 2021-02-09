@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_05_011654) do
+ActiveRecord::Schema.define(version: 2021_02_09_003053) do
 
   create_table "admissions", force: :cascade do |t|
     t.datetime "moment"
@@ -35,6 +35,7 @@ ActiveRecord::Schema.define(version: 2021_02_05_011654) do
     t.integer "admission_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "chronic_condition"
   end
 
   create_table "diagnostic_procedures", force: :cascade do |t|

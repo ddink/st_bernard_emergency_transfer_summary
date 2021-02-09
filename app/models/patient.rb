@@ -9,7 +9,6 @@ class Patient < ApplicationRecord
   has_one :facility, through: :admission
 
   has_many :allergies
-  has_many :chronic_conditions, foreign_key: "patient_id", class_name: "Diagnosis"
   has_many :medications, foreign_key: "patient_id", class_name: "MedicationOrder"
   has_many :diagnostic_procedures
   has_many :diagnoses
@@ -23,7 +22,7 @@ class Patient < ApplicationRecord
 
   def emergency_transfer_summary
     [
-        "This #{age} years old #{gender} was admitted to #{facility_name} emergency facility "\
+        "This #{age} years old #{gender} was admitted to #{facility.name} emergency facility "\
         "on #{admission.formatted_date} at #{admission.formatted_time} due to #{admission.diagnoses_description}. "\
         "The observed symptoms on admission were #{admission.symptoms_description}. "\
         "#{admission.observations_description}.",
@@ -50,7 +49,7 @@ class Patient < ApplicationRecord
   end
 
   def diagnoses_description
-    formatted_description_for diagnoses
+    formatted_description_for regular_diagnoses
   end
 
   def medication_administered
@@ -76,7 +75,11 @@ class Patient < ApplicationRecord
     description.join(" and ")
   end
 
-  def facility_name
-    facility.name
+  def chronic_conditions
+    diagnoses.chronic_conditions
+  end
+
+  def regular_diagnoses
+    diagnoses.regular_diagnoses
   end
 end
