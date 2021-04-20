@@ -5,4 +5,4 @@ jobs:
   include:
   - stage: test
     name: Rails Specs
-    script: rspec spec/
+    script: rake rspec
