@@ -10,7 +10,7 @@ RSpec.describe Observation, type: :model do
   end
 
   describe "validations" do
-    it { validate_presence_of :description }
+    it { should validate_presence_of :description }
   end
 
   describe "description" do
