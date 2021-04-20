@@ -97,7 +97,7 @@ RSpec.describe Patient, type: :model do
     end
 
     describe 'age' do
-      it { assert_equal @patient.age, 21 }
+      it { expect(@patient.age).to be 21 }
     end
 
     describe 'allergies_description' do
