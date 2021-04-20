@@ -5,11 +5,8 @@ module PatientsHelper
   end
 
   def current_user
-    if User.emergency_personnel.present?
-      @current_user ||= User.emergency_personnel.first
-    else
-      @current_user ||= User.first
-    end
+    @current_user ||= User.emergency_personnel.first
+    @current_user ||= User.first
   end
 
 end
