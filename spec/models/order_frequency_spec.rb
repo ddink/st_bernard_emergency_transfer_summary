@@ -5,6 +5,6 @@ RSpec.describe OrderFrequency, type: :model do
     it { should validate_presence_of :value }
     it { should validate_presence_of :unit }
 
-    it { assert_equal OrderFrequency.units[:hr], 0 }
+    it { expect(OrderFrequency.units[:hr]).to eq(0) }
   end
 end

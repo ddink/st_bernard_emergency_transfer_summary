@@ -8,7 +8,7 @@ RSpec.describe Facility, type: :model do
   end
 
   describe "validations" do
-    it { validate_presence_of :name }
+    it { should validate_presence_of :name }
   end
 
 end
