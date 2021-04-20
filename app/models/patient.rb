@@ -37,7 +37,7 @@ class Patient < ApplicationRecord
   end
 
   def age
-    ((Time.zone.now - dob.to_time) / 1.year.seconds).floor.to_s
+    Time.now.year - dob.year
   end
 
   def allergies_description
